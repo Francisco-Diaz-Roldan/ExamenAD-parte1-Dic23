@@ -124,7 +124,7 @@ import java.util.List;
                 worker.setFrom(rs.getDate("desde"));
                 out.add(worker);
             }
-            log.info("Worker updated"+out);
+            log.info("Trabajador updateado"+out);
         } catch (SQLException e) {
             log.severe("Error tras añadir trabajadores");
             throw new RuntimeException(e);
