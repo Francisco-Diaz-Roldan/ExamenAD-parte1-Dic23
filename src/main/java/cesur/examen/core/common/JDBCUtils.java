@@ -10,8 +10,8 @@ import java.util.Properties;
  * EXAMEN DE ACCESO A DATOS
  * Diciembre 2023
  *
- * Nombre del alumno:
- * Fecha:
+ * Nombre del alumno: Francisco Díaz Roldán
+ * Fecha: 11/12/2023
  *
  * No se permite escribir en consola desde las clases DAO, Service y Utils usando System.out.
  * En su lugar, usa log.info(), log.warning() y log.severe() para mostrar información interna
@@ -28,6 +28,7 @@ public class JDBCUtils {
      * JDBCUtils.class.getClassLoader().getResourceAsStream()
      */
     private static final Connection conn;
+    private final static Logger logger;
 
     static{
 

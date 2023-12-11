@@ -10,8 +10,8 @@ import cesur.examen.core.worker.WorkerService;
  * EXAMEN DE ACCESO A DATOS
  * Diciembre 2023
  *
- * Nombre del alumno:
- * Fecha:
+ * Nombre del alumno: Francisco Díaz Roldán
+ * Fecha: 11/12/2023
  */
 public class App 
 {
