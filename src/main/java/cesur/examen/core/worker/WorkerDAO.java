@@ -25,8 +25,7 @@ import java.util.List;
     /* Please, use this constants for the queries */
     private final String QUERY_ORDER_BY = "UPDATE trabajador SET nombre =?, dni =?, desde =? WHERE id =?";
     private final String QUERY_BY_DNI = "SELECT * FROM trabajador WHERE dni=?";
-    private final String UPDATE_BY_ID = "SELECT * FROM `trabajador` ORDER BY desde";
-
+    private final String UPDATE_BY_ID = "SELECT * FROM trabajador ORDER BY desde";
 
 
     @Override
