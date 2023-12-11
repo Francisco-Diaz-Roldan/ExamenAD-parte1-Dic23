@@ -23,17 +23,18 @@ import java.util.List;
 public class FileUtils {
 
     public static void toCSV(String fileName, List<Worker> workers) {
-        throw new RuntimeException("Not implemented yet!");
-
-        /*
-        Uncomment and implement body method!...
-
-        try (...) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Worker worker : workers) {
+                String dataLine = worker.getId() + "," +
+                        worker.getName() + "," +
+                        worker.getDni() + "," +
+                        worker.getFrom();
+                writer.write(dataLine);
+                writer.newLine();
+            }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        */
     }
 }
