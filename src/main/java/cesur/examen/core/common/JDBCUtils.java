@@ -4,7 +4,7 @@ import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * EXAMEN DE ACCESO A DATOS
@@ -28,23 +28,28 @@ public class JDBCUtils {
      * JDBCUtils.class.getClassLoader().getResourceAsStream()
      */
     private static final Connection conn;
-    private final static Logger logger;
+    private  static Logger logger;
 
-    static{
+    static {
+        try {
+            String url = "jdbc:mysql://localhost:3306/examenad";
+            String user = "root";
+            String password = "";
 
-        try{
+            conn = DriverManager.getConnection(url, user, password);
 
-            conn = null;
-            /* Make implementation here ...  */
+            if (conn == null) {
+                log.info("¡Error al conectar con la base de datos!");
+            } else {
+                log.info("¡Conexión lograda con éxito!");
+            }
 
-            if(conn==null) log.info("JDBCUtils Not implemented yet!");
-            else log.info("Succesfully connected!");
-
-        }catch( Exception ex){
-            log.severe("Error connecting to database");
-            throw new RuntimeException("Error connecting to database");
+        } catch (Exception ex) {
+            log.severe("Error al conectar a la base de datos");
+            throw new RuntimeException("Error al conectar a la base de datos", ex);
         }
     }
+
 
 
     public static Connection getConn() {

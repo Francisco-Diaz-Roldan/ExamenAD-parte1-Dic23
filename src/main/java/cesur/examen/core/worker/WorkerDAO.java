@@ -4,6 +4,7 @@ import cesur.examen.core.common.DAO;
 import cesur.examen.core.common.JDBCUtils;
 import lombok.extern.java.Log;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,11 @@ import java.util.List;
 @Log public class WorkerDAO implements DAO<Worker> {
 
     /* Please, use this constants for the queries */
-    private final String QUERY_ORDER_BY = "";
-    private final String QUERY_BY_DNI = "Select * from trabajador where dni=?";
-    private final String UPDATE_BY_ID = "";
+    private final String QUERY_ORDER_BY = "UPDATE trabajador SET nombre =?, dni =?, desde =? WHERE id =?";
+    private final String QUERY_BY_DNI = "SELECT * FROM trabajador WHERE dni=?";
+    private final String UPDATE_BY_ID = "SELECT * FROM `trabajador` ORDER BY desde";
+
+
 
     @Override
     public Worker save(Worker worker) {
@@ -39,12 +42,24 @@ import java.util.List;
      */
     @Override
     public Worker update(Worker worker) {
-        Worker out = null;
+        try (Connection connection = JDBCUtils.getConn();
+             PreparedStatement pst = connection.prepareStatement(UPDATE_BY_ID)) {
+            pst.setString(1, worker.getName());
+            pst.setString(2, worker.getDni());
+            pst.setDate(3, JDBCUtils.dateUtilToSQL(worker.getFrom()));
+            pst.setLong(4, worker.getId());
 
-        /* Make implementation here ...  */
-
-        return out;
+            int rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0) {
+                return worker;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error updating worker: " + e.getMessage(), e);
+        }
     }
+
 
     @Override
     public boolean remove(Worker worker) {
@@ -62,21 +77,15 @@ import java.util.List;
      * @return
      */
     public Worker getWorkerByDNI(String dni) {
-
         /* Implemented for your pleasure */
-
-        if( JDBCUtils.getConn()==null){
-            throw new RuntimeException("Connection is not created!");
-        }
-
         Worker out = null;
 
-        try( PreparedStatement st = JDBCUtils.getConn().prepareStatement(QUERY_BY_DNI) ){
+        try( PreparedStatement st = JDBCUtils.getConn().prepareStatement(QUERY_BY_DNI)){
             st.setString(1,dni);
             ResultSet rs = st.executeQuery();
             if(rs.next()){
                 Worker w = new Worker();
-                w.setId( rs.getLong("id") );
+                w.setId( rs.getLong("id"));
                 w.setName( rs.getString("nombre"));
                 w.setDni( rs.getString("dni"));
                 w.setFrom( rs.getDate("desde"));
@@ -100,11 +109,26 @@ import java.util.List;
      * If there is no worker, the list is empty.
      * @return
      */
-    public List<Worker> getAllOrderByFrom(){
+    public List<Worker> getAllOrderByFrom() {
         ArrayList<Worker> out = new ArrayList<>(0);
 
         /* Make implementation here ...  */
 
+        try(Statement st =JDBCUtils.getConn().createStatement()){
+            ResultSet rs = st.executeQuery(QUERY_ORDER_BY);
+            while(rs.next()){
+                Worker worker = new Worker();
+                worker.setId(rs.getLong("id"));
+                worker.setName(rs.getString("nombre"));
+                worker.setDni(rs.getString("dni"));
+                worker.setFrom(rs.getDate("desde"));
+                out.add(worker);
+            }
+            log.info("Worker updated"+out);
+        } catch (SQLException e) {
+            log.severe("Error tras añadir trabajadores");
+            throw new RuntimeException(e);
+        }
         return out;
     }
 }

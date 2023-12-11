@@ -31,6 +31,18 @@ public class WorkerService {
         Worker out = null;
 
         /* Make implementation here ...  */
+        WorkerDAO workerDAO = new WorkerDAO();
+
+        Worker trabajadorActualizar = workerDAO.getWorkerByDNI(dni);
+
+        Date fecha = new Date();
+
+        java.sql.Date fechaActualizada = new java.sql.Date(fecha.getTime());
+
+        trabajadorActualizar.setFrom( fecha );
+
+        // Perform the update in the database
+        out = workerDAO.update(trabajadorActualizar);
 
         return out;
     }
